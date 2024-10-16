@@ -22,14 +22,25 @@ namespace HotelBookin_Backend.Controllers
         public async Task<IActionResult> CreateReservation([FromBody] ReservationDTO createReservationDto)
         {
             var result = await _reservationService.AddNewReservation(createReservationDto);
-            return CreatedAtAction(nameof(GetReservationById), new { id = result.RoomId }, result);
+            if (result != null)
+            {
+                return Ok("Added");
+            }
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReservation(int id, [FromBody] UpdateReservationDto updateReservationDto)
         {
-            var result = await _reservationService.UpdateReservation(id, updateReservationDto);
-            return Ok(result);
+            try
+            {
+                var result = await _reservationService.UpdateReservation(id, updateReservationDto);
+                return Ok("Updated");
+            }
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -48,21 +59,41 @@ namespace HotelBookin_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReservationById(int id)
         {
-            var result = await _reservationService.GetReservationById(id);
-            return Ok(result);
+            try
+            {
+                var result = await _reservationService.GetReservationById(id);
+                return Ok(result);
+            }catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserReservations(int userId)
         {
-            var result = await _reservationService.GetReservationByUserId(userId);
-            return Ok(result);
+            try
+            {
+                var result = await _reservationService.GetReservationByUserId(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
         [HttpGet("hotel/{hotelId}")]
         public async Task<IActionResult> GetHotelReservations(int hotelId)
         {
-            var result = await _reservationService.GetReservationByHotelId(hotelId);
-            return Ok(result);
+            try
+            {
+                var result = await _reservationService.GetReservationByHotelId(hotelId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 

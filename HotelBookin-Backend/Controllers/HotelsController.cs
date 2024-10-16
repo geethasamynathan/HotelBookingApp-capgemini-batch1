@@ -20,7 +20,11 @@ namespace HotelBookin_Backend.Controllers
         public async Task<ActionResult<HotelDTO>> AddHotel([FromBody] HotelDTO hotelDto)
         {
             var createdHotel = await _hotelService.AddHotelAsync(hotelDto);
-            return CreatedAtAction(nameof(GetHotelById), new { id = createdHotel.HotelName }, createdHotel);
+            if (createdHotel != null)
+            {
+                return Ok("Added");
+            }
+            else return BadRequest();
         }
         
         [HttpPut("{id}")]
@@ -29,7 +33,7 @@ namespace HotelBookin_Backend.Controllers
             try
             {
                 var updatedHotel = await _hotelService.UpdateHotelAsync(id, hotelDto);
-                return Ok(updatedHotel);
+                return Ok("Updated");
             }
             catch (HotelNotFoundException ex)
             {
@@ -66,7 +70,7 @@ namespace HotelBookin_Backend.Controllers
                 var hotel = await _hotelService.GetHotelByIdAsync(id);
                 return Ok(hotel);
             }
-            catch (HotelNotFoundException ex)
+            catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
