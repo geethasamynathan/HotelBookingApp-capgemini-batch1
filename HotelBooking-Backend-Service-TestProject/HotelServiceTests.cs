@@ -35,7 +35,6 @@ namespace HotelBooking_Backend_Service_TestProject
             _hotelService = new HotelService(_context, Mapper.Object);
         }
 
-
         [Test]
         public async Task GetAllHotelsAsync_ReturnsAllHotels()
         {

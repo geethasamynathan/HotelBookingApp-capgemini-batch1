@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 
 namespace HotelBooking_Backend_Service_TestProject
 {
+    [TestFixture]
+    [Author("Kavya")]
     internal class RoomServiceTests
     {
         private readonly HotelBookingDbContext _context;
         private readonly IMapper _mapper;
         private readonly RoomManagement _roommanagement;
-
-        public RoomServiceTests()
+                public RoomServiceTests()
         {
             // Set up the in-memory database
             var options = new DbContextOptionsBuilder<HotelBookingDbContext>()

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace HotelBooking_Backend_Service_TestProject
 {
     [TestFixture]
+    [Author("Kavya")]
     public class ReservationServiceTests
     {
         private ReservationService _reservationService;
@@ -86,7 +87,6 @@ namespace HotelBooking_Backend_Service_TestProject
                 new Reservation { ReservationId = 4, Status = "confirmed" },
                 new Reservation { ReservationId = 5, Status = "confirmed" }
             };
-
             await _context.Reservations.AddRangeAsync(reservations);
             await _context.SaveChangesAsync();
 

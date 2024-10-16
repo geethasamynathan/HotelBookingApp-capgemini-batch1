@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace HotelBooking_Backend_Service_TestProject
 {
+    [TestFixture]
+    [Author("Kavya")]
     internal class SearchServiceTests
     {
         private SearchServices _searchServices;
@@ -39,7 +41,6 @@ namespace HotelBooking_Backend_Service_TestProject
             var hotel = new Hotel { HotelId = 11, ContactNumber = "4152637894", Location = "New York", HotelName = "Test" };
             await _context.Hotels.AddAsync(hotel);
             await _context.SaveChangesAsync();
-
             var hotelDto = new HotelDTO {  Location = "New York" };
             _mockMapper.Setup(m => m.Map<List<HotelDTO>>(It.IsAny<List<Hotel>>()))
                         .Returns(new List<HotelDTO> { hotelDto });

@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace HotelBooking_Backend_Service_TestProject
 {
+    [TestFixture]
+    [Author("Kavya")]
     public class PaymentServiceTests
     {
         private HotelBookingDbContext _context;
@@ -32,8 +34,6 @@ namespace HotelBooking_Backend_Service_TestProject
             _paymentService = new PaymentService(Mapper.Object, _context);
 
         }
-
-
 
         [Test]
         public async Task ProcessPayment_ValidCard_ReturnsPaymentDTO()

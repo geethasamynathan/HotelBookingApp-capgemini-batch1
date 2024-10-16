@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 
 namespace HotelBooking_Backend_Service_TestProject
 {
+
     [TestFixture]
+    [Author("Kavya")]
     public class ReviewServicesTests
     {
         private ReviewServices _reviewService;
@@ -161,7 +163,6 @@ namespace HotelBooking_Backend_Service_TestProject
             var review = new Review { ReviewId = 8, Comment = "Great stay!", HotelId = 1, UserId = 1 };
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
-
             var updatedReviewDto = new ReviewDTO { Comment = "Amazing stay!" };
             _mockMapper.Setup(m => m.Map(updatedReviewDto, review)).Returns(review);
             _mockMapper.Setup(m => m.Map<ReviewDTO>(review)).Returns(updatedReviewDto);

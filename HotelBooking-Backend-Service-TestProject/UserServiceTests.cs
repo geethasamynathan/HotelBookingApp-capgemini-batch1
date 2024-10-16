@@ -15,9 +15,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 namespace HotelBooking_Backend_Service_TestProject
 {
-
-
     [TestFixture]
+    [Author("Kavya")]
     public class UserServiceTests
     {
         private UserService _userService;
@@ -42,7 +41,6 @@ namespace HotelBooking_Backend_Service_TestProject
                 cfg.CreateMap<UserRegisterDTO, User>().ReverseMap();
             });
             _mapper = config.CreateMapper();
-
             // Mock configuration for JWT settings
             _configurationMock = new Mock<IConfiguration>();
             _configurationMock.Setup(m => m["Jwt:Key"]).Returns("YourSuperSecretKeyIsConvertToHashCode123");

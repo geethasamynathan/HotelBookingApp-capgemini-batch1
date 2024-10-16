@@ -95,6 +95,8 @@ namespace HotelBookin_Backend.Services
                 var payments = await _context.Payments
                     .Where(p => p.UserId == userId)
                     .ToListAsync();
+                var payment = await _context.Payments.FindAsync (userId);
+                if(payment == null)throw new UserNotFoundException(userId);
                 // Map the payment entities to DTOs and return
                 return _mapper.Map<List<PaymentDTO>>(payments);
             }

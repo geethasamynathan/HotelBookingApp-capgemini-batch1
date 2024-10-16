@@ -26,15 +26,29 @@ namespace HotelBookin_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPaymentById(int id)
         {
-            var result = await _paymentService.GetPaymentDetails(id);
-            return Ok(result);
+            try
+            {
+                var result = await _paymentService.GetPaymentDetails(id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetPaymentsByUserId(int userId)
         {
-            var result = await _paymentService.GetUserPayments(userId);
-            return Ok(result);
+            try
+            {
+                var result = await _paymentService.GetUserPayments(userId);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
     }
