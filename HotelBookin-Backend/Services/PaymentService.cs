@@ -36,35 +36,29 @@ namespace HotelBookin_Backend.Services
         /// <exception> PaymentProcessingException Thrown when card details are invalid.</exception>
         public async Task<PaymentDTO> ProcessPayment(ProcessPaymentDTO processPaymentDto)
         {
-            try
+            // Validate card details (basic validation)
+            if (!IsValidCard(processPaymentDto.CardNumber, processPaymentDto.ExpirationDate, processPaymentDto.CVV))
             {
-                // Validate card details (basic validation)
-                if (!IsValidCard(processPaymentDto.CardNumber, processPaymentDto.ExpirationDate, processPaymentDto.CVV))
-                {
-                    throw new PaymentProcessingException("Invalid card details.");
-                }
-
-                // Create a new payment record
-                var payment = new Payment
-                {
-                    UserId = processPaymentDto.UserID,
-                    Amount = processPaymentDto.Amount,
-                    PaymentMethod = "Credit Card",
-                    Date = DateTime.Now,
-                    Status = "confirmed" // In a real scenario, you might check payment gateway status
-                };
-
-                // Add payment to the database
-                await _context.Payments.AddAsync(payment);
-                await _context.SaveChangesAsync();
-
-                // Map the payment entity to a DTO and return
-                return _mapper.Map<PaymentDTO>(payment);
+                throw new PaymentProcessingException("Invalid card details.");
             }
-            catch (Exception ex)
+
+            // Create a new payment record
+            var payment = new Payment
             {
-                throw new Exception(ex.Message);
-            }
+                UserId = processPaymentDto.UserID,
+                Amount = processPaymentDto.Amount,
+                PaymentMethod = "Credit Card",
+                Date = DateTime.Now,
+                Status = "confirmed" // In a real scenario, you might check payment gateway status
+            };
+
+            // Add payment to the database
+            await _context.Payments.AddAsync(payment);
+            await _context.SaveChangesAsync();
+
+            // Map the payment entity to a DTO and return
+            return _mapper.Map<PaymentDTO>(payment);
+
         }
 
         /// <summary>
@@ -75,22 +69,17 @@ namespace HotelBookin_Backend.Services
         /// <exception> PaymentNotFoundException Thrown when a payment with the specified ID is not found.</exception>
         public async Task<PaymentDTO> GetPaymentDetails(int id)
         {
-            try
-            {
-                // Find the payment by ID
-                var payment = await _context.Payments.FindAsync(id);
-                if (payment == null)
-                {
-                    throw new PaymentNotFoundException(id);
-                }
 
-                // Map the payment entity to a DTO and return
-                return _mapper.Map<PaymentDTO>(payment);
-            }
-            catch (Exception ex)
+            // Find the payment by ID
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null)
             {
-                throw new Exception(ex.Message);
+                throw new PaymentNotFoundException(id);
             }
+
+            // Map the payment entity to a DTO and return
+            return _mapper.Map<PaymentDTO>(payment);
+
         }
 
         /// <summary>

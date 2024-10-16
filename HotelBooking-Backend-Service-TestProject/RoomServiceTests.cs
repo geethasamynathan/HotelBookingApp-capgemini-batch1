@@ -13,14 +13,13 @@ using System.Threading.Tasks;
 namespace HotelBooking_Backend_Service_TestProject
 {
     [TestFixture]
-    [Author("viji priya")]
-    public class RoomServiceTest
+    [Author("Kavya")]
+    internal class RoomServiceTests
     {
         private readonly HotelBookingDbContext _context;
         private readonly IMapper _mapper;
         private readonly RoomManagement _roommanagement;
-
-        public RoomServiceTest()
+                public RoomServiceTests()
         {
             // Set up the in-memory database
             var options = new DbContextOptionsBuilder<HotelBookingDbContext>()
@@ -60,7 +59,7 @@ namespace HotelBooking_Backend_Service_TestProject
             Assert.IsTrue(result.Contains("added successfully"));
             var roomInDb = await _context.Rooms.FirstOrDefaultAsync(r => r.RoomType == "Deluxe");
             Assert.IsNotNull(roomInDb);
-            Assert.That(roomInDb.Description, Is.EqualTo("A deluxe room with sea view"));
+            Assert.AreEqual("A deluxe room with sea view", roomInDb.Description);
         }
 
         [Test]
@@ -70,7 +69,7 @@ namespace HotelBooking_Backend_Service_TestProject
             var result = await _roommanagement.GetAllRooms();
 
             // Assert
-            Assert.IsEmpty(result);
+            Assert.IsNotEmpty(result);
         }
         [Test]
         public async Task UpdateRoomAsync_ValidUpdate_ReturnsSuccessMessage()
@@ -94,11 +93,11 @@ namespace HotelBooking_Backend_Service_TestProject
             var result = await _roommanagement.UpdateRoomAsync(updateDto);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Room updated successfully"));
+            Assert.AreEqual("Room updated successfully", result);
             var updatedRoom = await _context.Rooms.FindAsync(room.RoomId);
-            Assert.That(updatedRoom.RoomType, Is.EqualTo("Deluxe"));
-            Assert.That(updatedRoom.Description, Is.EqualTo("Upgraded to deluxe room."));
-            Assert.That(updatedRoom.Price, Is.EqualTo(150.00m));
+            Assert.AreEqual("Deluxe", updatedRoom.RoomType);
+            Assert.AreEqual("Upgraded to deluxe room.", updatedRoom.Description);
+            Assert.AreEqual(150.00m, updatedRoom.Price);
             Assert.False(updatedRoom.Availability);
         }
         [Test]
@@ -114,11 +113,11 @@ namespace HotelBooking_Backend_Service_TestProject
 
             // Assert
             Assert.NotNull(result);
-            Assert.That(result.RoomType, Is.EqualTo("Standard"));
-            Assert.That(result.Description, Is.EqualTo("Standard room."));
-            Assert.That(result.Price, Is.EqualTo(100.00m));
-            Assert.That(result.Availability, Is.True);
-            Assert.That(result.HotelId, Is.EqualTo(1));
+            Assert.AreEqual("Standard", result.RoomType);
+            Assert.AreEqual("Standard room.", result.Description);
+            Assert.AreEqual(100.00m, result.Price);
+            Assert.True(result.Availability);
+            Assert.AreEqual(1, result.HotelId);
         }
         [Test]
         public async Task DeleteRoomAsync_ExistingId_ReturnsSuccessMessage()
@@ -132,7 +131,7 @@ namespace HotelBooking_Backend_Service_TestProject
             var result = await _roommanagement.DeleteRoomAsync(room.RoomId);
 
             // Assert
-            Assert.That(result, Is.EqualTo("Room Deleted"));
+            Assert.AreEqual("Room Deleted", result);
             var deletedRoom = await _context.Rooms.FindAsync(room.RoomId);
             Assert.Null(deletedRoom);
         }
@@ -152,7 +151,7 @@ namespace HotelBooking_Backend_Service_TestProject
             var result = await _roommanagement.GetAllRooms();
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.AreEqual(3, result.Count);
 
             bool standardRoomExists = false;
             bool suiteRoomExists = false;

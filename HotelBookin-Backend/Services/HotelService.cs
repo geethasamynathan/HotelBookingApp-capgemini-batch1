@@ -52,17 +52,10 @@ namespace HotelBookin_Backend.Services
         /// <exception >HotelNotFoundException Thrown when a hotel with the specified ID is not found.</exception>
         public async Task<HotelDTO> GetHotelByIdAsync(int id)
         {
-            try
-            {
-                var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.HotelId == id);
-                if (hotel == null)
-                    throw new HotelNotFoundException(id);
-                return _mapper.Map<HotelDTO>(hotel);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            var hotel = await _context.Hotels.FirstOrDefaultAsync(h => h.HotelId == id);
+            if (hotel == null)
+                throw new HotelNotFoundException(id);
+            return _mapper.Map<HotelDTO>(hotel);
         }
 
         /// <summary>
@@ -116,19 +109,11 @@ namespace HotelBookin_Backend.Services
         /// <exception cref="HotelNotFoundException">Thrown when a hotel with the specified ID is not found.</exception>
         public async Task<bool> DeleteHotelAsync(int id)
         {
-
             var hotel = await _context.Hotels.FindAsync(id);
             if (hotel == null) throw new HotelNotFoundException(id);
-            var rooms = _context.Rooms.Where(r => r.HotelId == id).ToList();
-            foreach(var r in rooms)
-            {
-                r.Hotel = null;
-            }
             _context.Hotels.Remove(hotel);
             await _context.SaveChangesAsync();
             return true;
-
-
         }
 
         /// <summary>

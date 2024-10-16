@@ -35,21 +35,15 @@ namespace HotelBookin_Backend.Services
         /// <exception> NoHotelsFoundException Thrown when no hotels match the search criteria.</exception>
         public async Task<List<HotelDTO>> SearchHotelsAsync(string location)
         {
-            try
+            // Await the result from GetHotelsByLocationAsync to ensure it's completed
+            var hotels = await _context.Hotels.Where(h => h.Location == location).ToListAsync();
+            if (!hotels.Any())
             {
-                // Await the result from GetHotelsByLocationAsync to ensure it's completed
-                var hotels = await _context.Hotels.Where(h => h.Location == location).ToListAsync();
-                if (!hotels.Any())
-                {
-                    throw new NoHotelsFoundException("No hotels found matching your criteria.");
-                }
+                throw new NoHotelsFoundException("No hotels found matching your criteria.");
+            }
 
-                return _mapper.Map<List<HotelDTO>>(hotels); // Return the filtered hotels
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return _mapper.Map<List<HotelDTO>>(hotels); // Return the filtered hotels
+
         }
 
         /// <summary>
@@ -62,9 +56,7 @@ namespace HotelBookin_Backend.Services
         /// <exception>NoRoomsAvailableException Thrown when no rooms are available for the selected dates.</exception>
         public async Task<List<RoomDTO>> GetAvailableRoomAsync(int HotelId, DateTime checkIn, DateTime checkOut)
         {
-            try
-            {
-                var availableRooms = await _context.Rooms.Where(room =>
+            var availableRooms = await _context.Rooms.Where(room =>
                     !_context.Reservations.Any(res =>
                         res.RoomId == room.RoomId &&
                         ((checkIn >= res.CheckInDate && checkIn < res.CheckOutDate) ||
@@ -73,17 +65,13 @@ namespace HotelBookin_Backend.Services
                     ) && room.Availability
                 ).ToListAsync();
 
-                if (!availableRooms.Any())
-                {
-                    throw new NoRoomsAvailableException("No rooms available for the selected dates.");
-                }
-
-                return _mapper.Map<List<RoomDTO>>(availableRooms);
-            }
-            catch (Exception ex)
+            if (!availableRooms.Any())
             {
-                throw new Exception(ex.Message);
+                throw new NoRoomsAvailableException("No rooms available for the selected dates.");
             }
+
+            return _mapper.Map<List<RoomDTO>>(availableRooms);
+
         }
     }
 }

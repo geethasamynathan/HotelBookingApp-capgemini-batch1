@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
@@ -33,6 +32,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelBookin-Backend\HotelBookin-Backend.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HotelBookin-Backend">
+      <HintPath>..\HotelBookin-Backend\bin\Debug\net8.0\HotelBookin-Backend.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

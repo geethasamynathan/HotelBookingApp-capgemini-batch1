@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public PaymentProcessingException(string message)
-            : base(message)
+            //: base(message)
         {
         }
     }

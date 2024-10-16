@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="id">The ID of the hotel that was not found.</param>
         public HotelNotFoundException(int id)
-            : base($"Hotel with ID {id} not found.")
+            //: base($"Hotel with ID {id} not found.")
         {
         }
     }
