@@ -29,8 +29,15 @@ namespace HotelBookin_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoomById(int id)
         {
-            var result = await _roomManagement.GetRoomById(id);
-            return Ok(result);
+            try
+            {
+                var result = await _roomManagement.GetRoomById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         
         [HttpPost]
@@ -73,7 +80,7 @@ namespace HotelBookin_Backend.Controllers
                     var result = await _roomManagement.DeleteRoomAsync(id);
                     return Ok(result);                
             }
-            catch (RoomNotFoundException ex)
+            catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HotelBookin_Backend.Custom_Exceptions;
 using HotelBookin_Backend.Data;
 using HotelBookin_Backend.DTO;
 using HotelBookin_Backend.IServices;
@@ -68,11 +69,13 @@ namespace HotelBookin_Backend.Services
         {
             try { 
             var review = await _context.Reviews.FindAsync(reviewId);
+               if (review == null) throw new ReviewNotFoundException(reviewId);
                 if (review != null)
                 {
                     _context.Reviews.Remove(review);
                     await _context.SaveChangesAsync();
                 }
+                
             }
             catch (Exception ex)
             {
@@ -107,6 +110,7 @@ namespace HotelBookin_Backend.Services
             try
             {
                 var review = await _context.Reviews.FindAsync(reviewId);
+                if (review == null) throw new ReviewNotFoundException(reviewId);
                 return _mapper.Map<ReviewDTO>(review);
             }
             catch (Exception ex)
@@ -125,6 +129,8 @@ namespace HotelBookin_Backend.Services
             try
             {
                 var reviews = await _context.Reviews.Where(r => r.HotelId == hotelId).ToListAsync();
+                var review = await _context.Reviews.FirstOrDefaultAsync(r=>r.HotelId==hotelId);
+                if (review == null) throw new HotelNotFoundException(hotelId);
                 return _mapper.Map<IEnumerable<ReviewDTO>>(reviews);
             }
             catch (Exception ex)
@@ -143,6 +149,8 @@ namespace HotelBookin_Backend.Services
             try
             {
                 var reviews = await _context.Reviews.Where(r => r.UserId == userId).ToListAsync();
+                var review = await _context.Reviews.FirstOrDefaultAsync(r => r.UserId == userId);
+                if (review == null) throw new UserNotFoundException(userId);
                 return _mapper.Map<IEnumerable<ReviewDTO>>(reviews);
             }
             catch (Exception ex)
