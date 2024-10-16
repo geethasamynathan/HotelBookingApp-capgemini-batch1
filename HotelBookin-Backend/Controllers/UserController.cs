@@ -32,8 +32,14 @@ namespace HotelBookin_Backend.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetUserProfile(int userId)
         {
-            var result = await _userService.GetUserProfile(userId);
-            return Ok(result);
+            try
+            {
+                var result = await _userService.GetUserProfile(userId);
+                return Ok(result);
+            }catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("profile")]

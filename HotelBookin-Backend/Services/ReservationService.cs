@@ -100,6 +100,9 @@ namespace HotelBookin_Backend.Services
                 var reservations = await _context.Reservations
                     .Where(r => r.HotelId == hotelid)
                     .ToListAsync();
+                var reservation=await _context.Reservations.FindAsync(hotelid);
+                if (reservation == null)
+                    throw new ReservationNotFoundException(hotelid);
                 return _mapper.Map<List<ReservationDTO>>(reservations);
             }
             catch (Exception ex)
@@ -120,9 +123,7 @@ namespace HotelBookin_Backend.Services
             {
                 var reservation = await _context.Reservations.FindAsync(id);
                 if (reservation == null)
-                {
-                    throw new ReservationNotFoundException(id);
-                }
+                throw new ReservationNotFoundException(id);
                 return _mapper.Map<ReservationDTO>(reservation);
             }
             catch (Exception ex)
@@ -143,6 +144,9 @@ namespace HotelBookin_Backend.Services
                 var reservations = await _context.Reservations
                     .Where(r => r.UserId == userid)
                     .ToListAsync();
+                var reservation = await _context.Reservations.FirstOrDefaultAsync(r => r.UserId == userid);
+                if (reservation == null)
+                    throw new UserNotFoundException(userid);
                 return _mapper.Map<List<ReservationDTO>>(reservations);
             }
             catch (Exception ex)

@@ -27,37 +27,42 @@ namespace HotelBookin_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ReviewDTO>> GetReview(int id)
         {
-            var review = await _service.GetReviewByIdAsync(id)
-;
-            if (review == null)
+            try
             {
-                return NotFound();
-            }
+                var review = await _service.GetReviewByIdAsync(id);
             return Ok(review);
+            }catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // GET: api/Reviews/ByHotel/5
         [HttpGet("ByHotel/{hotelId}")]
         public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviewsByHotel(int hotelId)
         {
-            var reviews = await _service.GetReviewsByHotelAsync(hotelId);
-            if (reviews == null)
+            try
             {
-                return NotFound();
+                var reviews = await _service.GetReviewsByHotelAsync(hotelId);
+                return Ok(reviews);
+            }catch(Exception ex)
+            {
+                return NotFound(ex.Message);
             }
-            return Ok(reviews);
         }
 
         // GET: api/Reviews/ByUser/5
         [HttpGet("ByUser/{userId}")]
         public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviewsByUser(int userId)
         {
+            try {
             var reviews = await _service.GetReviewsByUserAsync(userId);
-            if (reviews == null)
-            {
-                return NotFound();
-            }
             return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // PUT: api/Reviews/5
@@ -85,22 +90,24 @@ namespace HotelBookin_Backend.Controllers
             {
                 return BadRequest();
             }
-            return CreatedAtAction(nameof(GetReview), new { id = review.ReviewDate }, review);
+            return Ok("Added");
         }
 
         // DELETE: api/Reviews/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            var review = await _service.GetReviewByIdAsync(id)
-;
-            if (review == null)
+            try
             {
-                return NotFound();
+                var review = await _service.GetReviewByIdAsync(id);
+                await _service.DeleteReviewAsync(id)
+    ;
+                return Ok("Deleted");
             }
-            await _service.DeleteReviewAsync(id)
-;
-            return NoContent();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         private async Task<bool> ReviewExists(int id)
