@@ -35,29 +35,23 @@ namespace HotelBookin_Backend.Services
         /// <exception> InvalidOperationException Thrown when mapping fails.</exception>
         public async Task<ReviewDTO> AddReviewAsync(ReviewDTO reviewDto)
         {
-            try
+            if (reviewDto == null)
             {
-                if (reviewDto == null)
-                {
-                    throw new ArgumentNullException(nameof(reviewDto));
-                }
-
-                var review = _mapper.Map<Review>(reviewDto);
-
-                if (review == null)
-                {
-                    throw new InvalidOperationException("Failed to map ReviewDto to Review");
-                }
-                _context.Reviews.Add(review);
-                await _context.SaveChangesAsync();
-                await _context.Entry(review).ReloadAsync(); // Reload to get the generated ID and other values
-
-                return _mapper.Map<ReviewDTO>(review);
+                throw new ArgumentNullException(nameof(reviewDto));
             }
-            catch (Exception ex)
+
+            var review = _mapper.Map<Review>(reviewDto);
+
+            if (review == null)
             {
-                throw new Exception("An error occurred while saving the review", ex);
+                throw new InvalidOperationException("Failed to map ReviewDto to Review");
             }
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+            await _context.Entry(review).ReloadAsync(); // Reload to get the generated ID and other values
+
+            return _mapper.Map<ReviewDTO>(review);
+
         }
 
         /// <summary>
@@ -66,8 +60,9 @@ namespace HotelBookin_Backend.Services
         /// <param name="reviewId">The ID of the review to delete.</param>
         public async Task DeleteReviewAsync(int reviewId)
         {
-            try { 
-            var review = await _context.Reviews.FindAsync(reviewId);
+            try
+            {
+                var review = await _context.Reviews.FindAsync(reviewId);
                 if (review != null)
                 {
                     _context.Reviews.Remove(review);

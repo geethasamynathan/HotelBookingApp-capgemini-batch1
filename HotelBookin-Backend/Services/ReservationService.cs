@@ -55,20 +55,15 @@ namespace HotelBookin_Backend.Services
         /// <exception> ReservationNotFoundException Thrown when the reservation is not found.</exception>
         public async Task CancelReservation(int id)
         {
-            try
+
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
             {
-                var reservation = await _context.Reservations.FindAsync(id);
-                if (reservation == null)
-                {
-                    throw new ReservationNotFoundException(id);
-                }
-                reservation.Status = "Cancelled"; // Update status
-                await _context.SaveChangesAsync();
+                throw new ReservationNotFoundException(id);
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            reservation.Status = "Cancelled"; // Update status
+            await _context.SaveChangesAsync();
+
         }
 
         /// <summary>
@@ -116,19 +111,13 @@ namespace HotelBookin_Backend.Services
         /// <exception>ReservationNotFoundException Thrown when the reservation is not found.</exception>
         public async Task<ReservationDTO> GetReservationById(int id)
         {
-            try
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
             {
-                var reservation = await _context.Reservations.FindAsync(id);
-                if (reservation == null)
-                {
-                    throw new ReservationNotFoundException(id);
-                }
-                return _mapper.Map<ReservationDTO>(reservation);
+                throw new ReservationNotFoundException(id);
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return _mapper.Map<ReservationDTO>(reservation);
+
         }
 
         /// <summary>
@@ -168,25 +157,19 @@ namespace HotelBookin_Backend.Services
         /// <exception> InvalidReservationStatusException Thrown when the provided status is invalid.</exception>
         public async Task<ReservationDTO> UpdateReservation(int id, UpdateReservationDto reservation)
         {
-            try
-            {
-                var existingReservation = await _context.Reservations.FindAsync(id);
-                if (existingReservation == null) throw new ReservationNotFoundException(id);
+            var existingReservation = await _context.Reservations.FindAsync(id);
+            if (existingReservation == null) throw new ReservationNotFoundException(id);
 
-                // Validate status if needed
-                if (!IsValidStatus(reservation.Status))
-                {
-                    throw new InvalidReservationStatusException();
-                }
-
-                _mapper.Map(reservation, existingReservation);
-                await _context.SaveChangesAsync();
-                return _mapper.Map<ReservationDTO>(existingReservation);
-            }
-            catch (Exception ex)
+            // Validate status if needed
+            if (!IsValidStatus(reservation.Status))
             {
-                throw new Exception(ex.Message);
+                throw new InvalidReservationStatusException();
             }
+
+            _mapper.Map(reservation, existingReservation);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<ReservationDTO>(existingReservation);
+
         }
     }
 }

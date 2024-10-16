@@ -18,14 +18,9 @@ namespace HotelBookin_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentDTO processPaymentDto)
         {
-            try
-            {
-                var result = await _paymentService.ProcessPayment(processPaymentDto);
-                return CreatedAtAction(nameof(GetPaymentById), new { id = result.PaymentID }, result);
-            }catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            var result = await _paymentService.ProcessPayment(processPaymentDto);
+             return CreatedAtAction(nameof(GetPaymentById), new { id = result.PaymentID }, result);
+            
         }
 
         [HttpGet("{id}")]
